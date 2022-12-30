@@ -39,12 +39,11 @@ class ProductRouting {
                     console.log(err)
                 } else {
                     let search = qs.parse(data)
-                    console.log(search.search)
                     fs.readFile('./views/viewUpLoadForm.html', 'utf-8', async (err, indexHtml) => {
                         if (err) {
                             console.log(err)
                         } else {
-                            let products = await ProductService.searchProduct(search.search)
+                            let products = await ProductService.searchStudent(search.search)
                             indexHtml = ProductRouting.getHtmlProducts(products, indexHtml);
                             res.writeHead(200, 'text/html');
                             res.write(indexHtml);
