@@ -13,12 +13,12 @@ class ProductRouting {
         <td><a href="/product/delete/${product.id}" type="button" class="btn btn-danger">Delete</a></td>
     </tr>`
         });
-        indexHtml = indexHtml.replace('{product}', tbody);
+        indexHtml = indexHtml.replace('{student}', tbody);
         return indexHtml;
     }
     static showHome(req, res) {
         if (req.method === 'GET') {
-            fs.readFile('./views/index.html', 'utf-8', async (err, indexHtml) => {
+            fs.readFile('./views/viewUpLoadForm.html', 'utf-8', async (err, indexHtml) => {
                 if (err) {
                     console.log(err)
                 } else {
@@ -40,7 +40,7 @@ class ProductRouting {
                 } else {
                     let search = qs.parse(data)
                     console.log(search.search)
-                    fs.readFile('./views/index.html', 'utf-8', async (err, indexHtml) => {
+                    fs.readFile('./views/viewUpLoadForm.html', 'utf-8', async (err, indexHtml) => {
                         if (err) {
                             console.log(err)
                         } else {
@@ -57,7 +57,7 @@ class ProductRouting {
     }
     static showFormCreate(req, res) {
         if (req.method === 'GET') {
-            fs.readFile('./views/product/create.html', 'utf-8', (err,createHtml) => {
+            fs.readFile('./views/student/create.html', 'utf-8', (err,createHtml) => {
                 if (err) {
                     console.log(err)
                 } else {
@@ -86,7 +86,7 @@ class ProductRouting {
     }
     static showFormEdit(req, res, id) {
         if (req.method === 'GET') {
-            fs.readFile('./views/product/edit.html', 'utf-8', async (err,editHtml) => {
+            fs.readFile('./views/student/edit.html', 'utf-8', async (err,editHtml) => {
                 if (err) {
                     console.log(err)
                 } else {
@@ -118,7 +118,7 @@ class ProductRouting {
     }
     static showFormDelete(req, res,id) {
       if (req.method === 'GET') {
-          fs.readFile('./views/product/delete.html', 'utf-8', async (err,deleteHtml) => {
+          fs.readFile('./views/student/delete.html', 'utf-8', async (err,deleteHtml) => {
               if (err) {
                   console.log(err)
               } else {

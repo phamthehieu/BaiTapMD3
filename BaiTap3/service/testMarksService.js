@@ -13,5 +13,17 @@ class TestMarksService {
             })
         })
     }
+    static finById(id) {
+        let connection = Connection.getConnection();
+        return new Promise((resolve, reject) => {
+            connection.query(`SELECT * FROM testmarks WHERE idTestMark = ${id}`,(err, product) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(product)
+                }
+            })
+        })
+    }
 }
 module.exports = TestMarksService;
