@@ -61,6 +61,5 @@ class StudentService {
             })
         })
     }
-    static searchStudent() {}
 }
 module.exports = StudentService;
