@@ -4,9 +4,9 @@ const TestMarksService = require('../../service/testMarksService')
 const qs = require('qs');
 
 class StudentRouting {
-    static getStudent(products, indexHtml) {
+    static getStudent(students, indexHtml) {
         let tbody = '';
-        products.map((student, index) => {
+        students.map((student, index) => {
             tbody += `
              <tr style="text-align: center">
                 <td>${index + 1}</td>
@@ -39,17 +39,43 @@ class StudentRouting {
         return indexHtml;
     }
     static showHome(req, res) {
-        fs.readFile('./views/home.html', 'utf-8', async (err, homeHtml) => {
-            if (err) {
-                console.log(err)
-            } else {
-               let a =  await StudentService.getStudents()
-                homeHtml = StudentRouting.getStudent(a, homeHtml);
-                res.writeHead(200, 'text/html');
-                res.write(homeHtml);
-                res.end();
-            }
-        })
+       if (req.method === 'GET') {
+           fs.readFile('./views/home.html', 'utf-8', async (err, homeHtml) => {
+               if (err) {
+                   console.log(err)
+               } else {
+                   let a =  await StudentService.getStudents()
+                   homeHtml = StudentRouting.getStudent(a, homeHtml);
+                   res.writeHead(200, 'text/html');
+                   res.write(homeHtml);
+                   res.end();
+               }
+           })
+       } else {
+           let data = '';
+           console.log(data)
+           req.on('data', chuck => {
+               data += chuck
+           })
+           req.on('end',async (err) => {
+               if (err) {
+                   console.log(err)
+               } else {
+                   let search = qs.parse(data);
+                   fs.readFile('./views/home.html', 'utf-8', async (err, searchHtml) => {
+                       if (err) {
+                           console.log(err)
+                       } else {
+                           let students =  await StudentService.searchStudent(search.search)
+                           searchHtml = StudentRouting.getStudent(students, searchHtml);
+                           res.writeHead(200, 'text/html');
+                           res.write(searchHtml);
+                           res.end();
+                       }
+                   })
+               }
+           })
+       }
     }
     static showCreate(req,res) {
         if (req.method === 'GET') {

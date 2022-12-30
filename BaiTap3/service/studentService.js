@@ -61,5 +61,17 @@ class StudentService {
             })
         })
     }
+    static searchStudent(search) {
+        let connection = Connection.getConnection();
+        return new Promise((resolve, reject) => {
+            connection.query(`SELECT * FROM students WHERE name LIKE '%${search}%';`, (err, student) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(student)
+                }
+            })
+        })
+    }
 }
 module.exports = StudentService;
