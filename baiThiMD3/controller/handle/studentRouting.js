@@ -1,6 +1,6 @@
 const fs = require('fs');
 const StudentService = require('../../service/studentService');
-const TestMarksService = require('../../service/testMarksService')
+const TestMarksService = require('../../../BaiTap3/service/testMarksService')
 const qs = require('qs');
 
 class StudentRouting {
@@ -11,9 +11,11 @@ class StudentRouting {
              <tr style="text-align: center">
                 <td>${index + 1}</td>
                 <td>${student.name}</td>
-                <td>${student.age}</td>
-                <td>${student.homeTown}</td>
-                <td>${student.nameTestMark}</td>
+                <td>${student.class}</td>
+                <td>${student.theoreticalPoint}</td>
+                <td>${student.Assess}</td>
+                <td>${student.practicePoints}</td>
+                <td>${student.description}</td>
                 <td><a href="/student/edit/${student.id}" type="button" class="btn btn-primary">Edit</a></td> 
             <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop${student.id}">Delete</button>
             <div class="modal fade" id="staticBackdrop${student.id}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -53,7 +55,6 @@ class StudentRouting {
            })
        } else {
            let data = '';
-           console.log(data)
            req.on('data', chuck => {
                data += chuck
            })
@@ -84,14 +85,6 @@ class StudentRouting {
                     console.log(err)
                 } else {
                     res.writeHead(200, 'text/html');
-                    let testMarksService = await TestMarksService.findAll();
-                    let option = '';
-                    testMarksService.map(data => {
-                        option += `
-                        <option value="${data.idTestMark}">${data.nameTestMark}</option>
-                        `
-                    })
-                    createHtml = createHtml.replace('{testMarksService}', option);
                     res.write(createHtml);
                     res.end();
                 }
@@ -120,19 +113,12 @@ class StudentRouting {
                     console.log(err)
                 } else {
                     let student = await StudentService.finById(id)
-                    let testMark = await TestMarksService.finById(student[0].idTestMarks )
                     editHtml = editHtml.replace('{name}', student[0].name);
-                    editHtml = editHtml.replace('{age}', student[0].age);
-                    editHtml = editHtml.replace('{homeTown}', student[0].homeTown);
-                    editHtml = editHtml.replace('{Test}', testMark[0].nameTestMark);
-                    let option = '';
-                    let testMarks = await TestMarksService.findAll()
-                    await testMarks.map(data => {
-                        option += `
-                        <option value="${data.idTestMark}">${data.nameTestMark}</option>
-                        `
-                    })
-                    editHtml = editHtml.replace('{testMarksService}',option)
+                    editHtml = editHtml.replace('{class}', student[0].class);
+                    editHtml = editHtml.replace('{theoreticalPoint}', student[0].theoreticalPoint);
+                    editHtml = editHtml.replace('{Assess}', student[0].Assess);
+                    editHtml = editHtml.replace('{practicePoints}', student[0].practicePoints);
+                    editHtml = editHtml.replace('{description}', student[0].description);
                     res.writeHead(200, 'text/html');
                     res.write(editHtml);
                     res.end();
@@ -161,6 +147,21 @@ class StudentRouting {
             res.writeHead(301, {'location': '/student/home'});
             res.end();
         }
+    }
+    static sortTheoreticalPoint(req, res) {
+       if (req.method === 'GET') {
+           fs.readFile('./views/student/sort.html', 'utf-8', async (err, sortHtml) => {
+               if (err) {
+                   console.log(err)
+               } else {
+                let a = await StudentService.sortTheoreticalPoint()
+                   sortHtml = await StudentRouting.getStudent(a, sortHtml)
+                   res.writeHead(200,'text/html')
+                   res.write(sortHtml);
+                   res.end();
+               }
+           })
+       }
     }
 }
 module.exports = StudentRouting;
